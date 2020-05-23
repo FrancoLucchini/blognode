@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="css/index.css">
+    <script src="https://cdn.tiny.cloud/1/w77pas5onidy9xm6evvhkvvj8vpsj2crueueh9ts2tnzcmbn/tinymce/5/tinymce.min.js"
+        referrerpolicy="origin" />
+    </script>
+    <script>
+        tinymce.init({
+            selector: '#content',
+            plugins: "image",
+        });
+    </script>
+    <%- include('partials/header') %>
+    
+</head>
+
+<body>
+    <%- include('partials/navigation') %>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 p-4">
+                <%- include('partials/errors') %>
+                <form action="/post/<%= post.id %>/edit?_method=PUT" method="POST" class="was-validated" enctype="multipart/form-data">
+                    <input type="hidden" name="_method" value="PUT">
+                    <div class="form-group">
+                        <input type="text" name="title" class="form-control" placeholder="Enter a title" value="<%= post.title %>">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="description" class="form-control" placeholder="Enter a description" value="<%= post.description %>">
+                    </div>
+                    <div class="form-group">
+                        <textarea name="content" id="content" rows="30"><%= post.content %></textarea>
+                    </div>
+            </div>
+            <div class="col-md-4 p-4">
+                <div class="form-group">
+                    <input type="text" name="category" class="form-control" placeholder="Enter a category" value="<%= post.category %>">
+                </div>
+            </div>
+            <div class="col-md-4 p-4">
+                <div class="input-group mb-3">
+                    <div class="custom-file">
+                        <input type="file" name="image" class="custom-file-input" id="validatedCustomFile">
+                        <label class="custom-file-label" for="validatedCustomFile"
+                            aria-describedby="inputGroupFileAddon02">Choose Miniature</label>
+                        <div class="invalid-feedback">Example invalid custom file feedback</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 p-4">
+                <button type="submit" class="btn btn-dark btn-block">Edit Post</button>
+            </div>
+            </form>
+        </div>
+    </div>
+
+
+
+
+</body>
+
+</html>

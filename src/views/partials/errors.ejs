@@ -1,0 +1,12 @@
+<% if(error != "") { %>
+    <div class="alert alert-danger" role="alert">
+        <%= error %>
+</div>
+<% }%>
+
+
+<%  if (errors != undefined) { errors.forEach(function(error){ %>
+<div class="alert alert-danger" role="alert">
+    <%= error.text %>
+</div>
+<% }); }%>

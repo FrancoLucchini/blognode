@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <%- include('partials/header') %>
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+
+<body>
+    <%- include('partials/navigation') %>
+    <div class="container p-4">
+        <%- include('partials/success') %>
+        <%- include('partials/errors') %>
+
+        <div class="row">
+            <div class="col-md-8 text-dark">
+                <% if(posts.length > 0){ %>
+                <h3 class="text-uppercase"><%- _category -%></h3>
+                <hr class="text-light">
+                <% posts.forEach(function(post){ %>
+                <div class="card mb-3">
+                    <div class="row no-gutters">
+                        <a href="/post/<%= post.id %>"><img src="<%= post.path %>" class="card-img"
+                                style="max-width:160px; max-height: 160px; min-height: 160px;"></a>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <a href="/post/<%= post.id %>">
+                                    <h5 class="card-title"><%= post.title %></h5>
+                                    <p><%- post.description -%></p>
+                                </a>
+                                <p class="card-text">
+                                    <p id="description"></p>
+                                    <a href="/users/profile/<%= post.userId %>"><small class="text-muted">Made
+                                            by <%= post.user %></small></a>
+                                    <small class="text-muted"><%= format(post.created_at) %></small>
+                                    <small class="text-muted ml-4">Views: <%- post.views -%></small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+                <% } else{ %>
+                    <h3 class="text-uppercase">No results found: <%- _category -%></h3>
+                <% } %>
+            </div>
+            <% if(user){ %>
+            <div class="col-md-4 text-dark">
+                <div class="card mt-5 ml-5" style="max-width: 200px;">
+                    <a href="/users/profile/<%= user.id %>"><img src="<%= user.path %>" class="card-img-top"></a>
+                    <div class="card-body text-dark">
+                        <h5 class="card-title"><%= user.nick -%></h5>
+                        <hr>
+                        <small>Posts: <%- user.postsAccountant -%></small>
+                        <hr>
+                        <small>Registered: <%= moment(user.registeredFrom).format('MM-DD-YYYY') %></small>
+                        <hr>
+                        <small>Last login: <%= moment(user.logged).format('MM-DD-YYYY') %></small>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+        </div>
+</body>
+
+</html>
