@@ -2,6 +2,16 @@ const Post = require('../models/post');
 const User = require('../models/user');
 const Comment = require('../models/comment');
 
+
+const cloudinary = require('cloudinary');
+cloudinary.config({
+    cloud_name: process.env.CLOUD,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET_KEY
+});
+
+const fs = require('fs-extra');
+
 postCtrl = {}
 
 
@@ -18,11 +28,12 @@ postCtrl.renderCreatePost = (req, res) => {
 postCtrl.createPost = async (req, res) => {
     const errors = [];
     const {title, description, category, content} = req.body;
-    if(!title || title.length < 10 || title.length > 20){
-        errors.push({text: 'Insert a title of more than 10 words and less than 20'});
+    
+    if(!title){
+        errors.push({text: 'Insert a title'});
     }
-    if(!description || description.length < 10 || description.length > 20){
-        errors.push({text: 'Insert a description of more than 10 words and less than 20 '});
+    if(!description){
+        errors.push({text: 'Insert a description'});
     }
     if(!category){
         errors.push({text: 'Insert a category'});
@@ -51,16 +62,15 @@ postCtrl.createPost = async (req, res) => {
         post.user = user.nick;
         user.postsAccountant = user.postsAccountant + 1;
         if(req.file){
-            post.filename = req.file.filename;     
-            post.originalname = req.file.originalname;      
-            post.mimetype = req.file.mimetype;      
-            post.path = '/img/uploads/' + req.file.filename;
-            post.size = req.file.size;
+            const result = await cloudinary.v2.uploader.upload(req.file.path);     
+            post.path = result.url;
+            await fs.unlink(req.file.path);
         } else{
             post.path = '/img/uploads/Usuario.png'
         }
         await post.save();
         await user.save();
+        
         req.flash('success_msg', 'Post created');
         res.redirect('/');
     }

@@ -3,6 +3,15 @@ const Post = require('../models/post');
 
 const config = require('../config/config');
 
+const cloudinary = require('cloudinary');
+cloudinary.config({
+    cloud_name: process.env.CLOUD,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET_KEY
+});
+
+const fs = require('fs-extra');
+
 const passport = require('passport');
 
 userCtrl = {};
@@ -41,11 +50,9 @@ userCtrl.signUpPost = async (req, res) => {
             user.email = req.body.email;   
             user.password = req.body.password;
             if(req.file){
-                user.filename = req.file.filename;     
-                user.originalname = req.file.originalname;      
-                user.mimetype = req.file.mimetype;      
-                user.path = '/img/uploads/' + req.file.filename;
-                user.size = req.file.size;
+                const result = await cloudinary.v2.uploader.upload(req.file.path);     
+                user.path = result.url;
+                await fs.unlink(req.file.path);
             } else{
                 user.path = '/img/uploads/Usuario.png'
             }
